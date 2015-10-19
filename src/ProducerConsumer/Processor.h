@@ -7,6 +7,9 @@ public:
 	virtual ~Processor(){}
 
 	virtual void run() = 0;
+
+protected:
+	unsigned long long m_times = 0;
 };
 
 
@@ -17,6 +20,12 @@ public:
 	ProducerProcessor() : Processor()	{}
 	virtual ~ProducerProcessor(){}
 	
+	virtual T process()
+	{
+		run();
+		return getOutput();
+	}
+
 	virtual T getOutput()
 	{
 		return m_out;
@@ -34,6 +43,12 @@ public:
 	ConsumerProcessor() : Processor() {}
 	virtual ~ConsumerProcessor(){}
 	
+	virtual void process(const T &data)
+	{
+		setInput(data);
+		run();
+	}
+
 	virtual void setInput(const T &data)
 	{
 		m_in = data;
@@ -49,6 +64,13 @@ class ConsumerProducerProcessor : public Processor
 public:
 	ConsumerProducerProcessor() : Processor() {}
 	virtual ~ConsumerProducerProcessor(){}
+
+	virtual T2 process(const T1 &data)
+	{
+		setInput(data);
+		run();
+		return getOutput();
+	}
 
 	virtual void setInput(const T1 &data)
 	{
